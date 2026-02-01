@@ -1777,9 +1777,20 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
     const setTab = setAppTab;
     const listEndRef = useRef(null);
     
+    // Core team display order
+    const coreTeamOrder = [
+      'dhruvbuilds@gmail.com',
+      'yugdagaofficial@gmail.com', 
+      'alexsimon2k5@gmail.com',
+      'vanshmoryani.05@gmail.com',
+      'shamithvinod.8@gmail.com',
+      'roderic@dyvest.org',
+      'pragdeeshn@gmail.com'
+    ];
+    
     // Memoized filtered results - only recalculates when dependencies change
     const filtered = useMemo(() => {
-      return profiles.filter(p => { 
+      const results = profiles.filter(p => { 
         if (p.id === user?.id || p.flagged) return false; 
         if (filter === 'core') return p.isCore; 
         if (filter === 'mutual') return getMutualInterests(p).length > 0;
@@ -1789,6 +1800,21 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
           return p.name.toLowerCase().includes(s) || p.college.toLowerCase().includes(s) || p.interests.some(i => i.toLowerCase().includes(s)); 
         } 
         return true; 
+      });
+      
+      // Sort: Core team first (in specific order), then others by newest
+      return results.sort((a, b) => {
+        const aIsCore = a.isCore ? coreTeamOrder.indexOf(a.email.toLowerCase()) : -1;
+        const bIsCore = b.isCore ? coreTeamOrder.indexOf(b.email.toLowerCase()) : -1;
+        
+        // Both core team - sort by defined order
+        if (aIsCore !== -1 && bIsCore !== -1) return aIsCore - bIsCore;
+        // Only a is core - a comes first
+        if (aIsCore !== -1) return -1;
+        // Only b is core - b comes first
+        if (bIsCore !== -1) return 1;
+        // Neither is core - sort by newest (createdAt desc)
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
       });
     }, [profiles, user?.id, filter, debouncedSearch]);
     
