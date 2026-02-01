@@ -155,6 +155,12 @@ const StrategiaConnect = () => {
   const avatarOptions = ['👨‍💼', '👩‍💼', '👨‍💻', '👩‍💻', '👨‍🎓', '👩‍🎓'];
   
 const allowlist = [
+    // Test accounts
+    { email: 'test1@strategia.com', phone: '+911111111111', name: 'Test User 1' },
+    { email: 'test2@strategia.com', phone: '+912222222222', name: 'Test User 2' },
+    { email: 'test3@strategia.com', phone: '+913333333333', name: 'Test User 3' },
+    { email: 'test4@strategia.com', phone: '+914444444444', name: 'Test User 4' },
+    { email: 'test5@strategia.com', phone: '+915555555555', name: 'Test User 5' },
     // Real participants
     { email: 'fate.elec@gmail.com', phone: '+917395997821', name: 'Fatema' },
     { email: 'jrtheo0914@gmail.com', phone: '+917824024015', name: 'Joanne Rose Theopaul' },
