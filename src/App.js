@@ -93,6 +93,7 @@ const StrategiaConnect = () => {
   const [announcements, setAnnouncements] = useState(() => getStoredState('announcements', []));
   const [showQR, setShowQR] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [editForm, setEditForm] = useState({ avatar: '', bio: '', linkedin: '', interests: [], lookingFor: [] });
   const [visibleCount, setVisibleCount] = useState(20);
   const [appTab, setAppTab] = useState('discover'); // App tab state at parent level
   const [networkError, setNetworkError] = useState(false);
@@ -1980,8 +1981,7 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
                 </div>
                 {user.bio && <p className="bio">{user.bio}</p>}
                 <div className="tags">{user.interests.map(i => <span key={i}>{i}</span>)}</div>
-                <button type="button" className="btn-edit" onClick={() => setShowEdit(true)}>✏️ Edit Profile</button>
-                <button type="button" className="btn-qr" onClick={() => setShowQR(true)}>📱 Share Profile (QR Code)</button>
+                <button type="button" className="btn-edit" onClick={() => { setEditForm({ avatar: user.avatar, bio: user.bio || '', linkedin: user.linkedin || '', interests: [...(user.interests || [])], lookingFor: [...(user.lookingFor || [])] }); setShowEdit(true); }}>✏️ Edit Profile</button>
               </div>
               <FeedbackForm user={user} onSubmit={submitFeedback} feedbacks={feedbacks} />
               <div className="settings"><h4>Settings</h4><label>Visibility<select value={user.visible} onChange={e => setUser({ ...user, visible: e.target.value })}><option value="all">Everyone</option><option value="connections">Connections only</option></select></label></div>
@@ -2020,63 +2020,6 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
           </div>
         )}
         {report && (<div className="modal-bg" onClick={() => setReport(null)}><div className="modal sm" onClick={e => e.stopPropagation()}><button type="button" className="close" onClick={() => setReport(null)}>✕</button><h2>Report {report.name}</h2><select id="reason"><option value="">Select reason</option><option>Inappropriate</option><option>Spam/Fake</option><option>Harassment</option><option>Other</option></select><div className="modal-bot"><button type="button" className="btn-ghost" onClick={() => setReport(null)}>Cancel</button><button type="button" className="btn-danger" onClick={() => { const r = document.getElementById('reason').value; if (r) { flag(report.id, r); setReport(null); } }}>Submit</button></div></div></div>)}
-        {showQR && user && (
-          <div className="modal-bg" onClick={() => setShowQR(false)}>
-            <div className="modal qr-modal" onClick={e => e.stopPropagation()}>
-              <button type="button" className="close" onClick={() => setShowQR(false)}>✕</button>
-              <div className="qr-content">
-                <h2>Share Your Profile</h2>
-                <p>Let others scan to connect with you</p>
-                <div className="qr-code">
-                  <svg viewBox="0 0 200 200" className="qr-svg">
-                    {/* QR Code Pattern - Simplified visual representation */}
-                    <rect x="20" y="20" width="50" height="50" fill="#fff"/>
-                    <rect x="25" y="25" width="40" height="40" fill="#000"/>
-                    <rect x="30" y="30" width="30" height="30" fill="#fff"/>
-                    <rect x="35" y="35" width="20" height="20" fill="#000"/>
-                    <rect x="130" y="20" width="50" height="50" fill="#fff"/>
-                    <rect x="135" y="25" width="40" height="40" fill="#000"/>
-                    <rect x="140" y="30" width="30" height="30" fill="#fff"/>
-                    <rect x="145" y="35" width="20" height="20" fill="#000"/>
-                    <rect x="20" y="130" width="50" height="50" fill="#fff"/>
-                    <rect x="25" y="135" width="40" height="40" fill="#000"/>
-                    <rect x="30" y="140" width="30" height="30" fill="#fff"/>
-                    <rect x="35" y="145" width="20" height="20" fill="#000"/>
-                    {/* Data pattern */}
-                    <rect x="80" y="20" width="10" height="10" fill="#000"/>
-                    <rect x="95" y="20" width="10" height="10" fill="#000"/>
-                    <rect x="110" y="20" width="10" height="10" fill="#000"/>
-                    <rect x="80" y="35" width="10" height="10" fill="#000"/>
-                    <rect x="110" y="35" width="10" height="10" fill="#000"/>
-                    <rect x="80" y="80" width="40" height="40" fill="#000"/>
-                    <rect x="85" y="85" width="30" height="30" fill="#fff"/>
-                    <rect x="90" y="90" width="20" height="20" fill="#000"/>
-                    <rect x="20" y="80" width="10" height="10" fill="#000"/>
-                    <rect x="35" y="80" width="10" height="10" fill="#000"/>
-                    <rect x="50" y="80" width="10" height="10" fill="#000"/>
-                    <rect x="130" y="80" width="10" height="10" fill="#000"/>
-                    <rect x="150" y="80" width="10" height="10" fill="#000"/>
-                    <rect x="170" y="80" width="10" height="10" fill="#000"/>
-                    <rect x="80" y="130" width="10" height="10" fill="#000"/>
-                    <rect x="95" y="145" width="10" height="10" fill="#000"/>
-                    <rect x="110" y="130" width="10" height="10" fill="#000"/>
-                    <rect x="130" y="130" width="10" height="10" fill="#000"/>
-                    <rect x="150" y="150" width="10" height="10" fill="#000"/>
-                    <rect x="170" y="170" width="10" height="10" fill="#000"/>
-                  </svg>
-                </div>
-                <div className="qr-profile">
-                  <span className="av">{user.avatar}</span>
-                  <div>
-                    <b>{user.name}</b>
-                    <span>{user.college}</span>
-                  </div>
-                </div>
-                <p className="qr-hint">In production, this will be a real scannable QR code linked to your profile</p>
-              </div>
-            </div>
-          </div>
-        )}
         {showEdit && user && (
           <div className="modal-bg" onClick={() => setShowEdit(false)}>
             <div className="modal edit-modal" onClick={e => e.stopPropagation()}>
@@ -2087,25 +2030,27 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
                   <label>Avatar
                     <div className="avatar-inline">
                       {['👤', '👨‍💼', '👩‍💼', '🧑‍💻', '👨‍🎓', '👩‍🎓', '🦊', '🦁', '🐯', '🎯', '🚀', '💼'].map(a => (
-                        <button key={a} type="button" className={user.avatar === a ? 'on' : ''} onClick={() => setUser({...user, avatar: a})}>{a}</button>
+                        <button key={a} type="button" className={editForm.avatar === a ? 'on' : ''} onClick={() => setEditForm({...editForm, avatar: a})}>{a}</button>
                       ))}
                     </div>
                   </label>
-                  <label>Bio<textarea value={user.bio || ''} onChange={e => setUser({...user, bio: e.target.value})} placeholder="Tell others about yourself..." maxLength={150} /></label>
-                  <label>LinkedIn URL<input type="url" value={user.linkedin || ''} onChange={e => setUser({...user, linkedin: e.target.value})} placeholder="https://linkedin.com/in/yourprofile" /></label>
+                  <label>Bio<textarea value={editForm.bio} onChange={e => setEditForm({...editForm, bio: e.target.value})} placeholder="Tell others about yourself..." maxLength={150} /></label>
+                  <label>LinkedIn URL<input type="text" value={editForm.linkedin} onChange={e => setEditForm({...editForm, linkedin: e.target.value})} placeholder="linkedin.com/in/yourprofile" /></label>
                   <label>Interests
                     <div className="chips">
-                      {interests.map(i => <button key={i} type="button" className={user.interests?.includes(i) ? 'on' : ''} onClick={() => setUser({...user, interests: user.interests?.includes(i) ? user.interests.filter(x => x !== i) : [...(user.interests || []), i]})}>{i}</button>)}
+                      {interests.map(i => <button key={i} type="button" className={editForm.interests?.includes(i) ? 'on' : ''} onClick={() => setEditForm({...editForm, interests: editForm.interests?.includes(i) ? editForm.interests.filter(x => x !== i) : [...(editForm.interests || []), i]})}>{i}</button>)}
                     </div>
                   </label>
                   <label>Looking For
                     <div className="chips">
-                      {goals.map(g => <button key={g} type="button" className={user.lookingFor?.includes(g) ? 'on' : ''} onClick={() => setUser({...user, lookingFor: user.lookingFor?.includes(g) ? user.lookingFor.filter(x => x !== g) : [...(user.lookingFor || []), g]})}>{g}</button>)}
+                      {goals.map(g => <button key={g} type="button" className={editForm.lookingFor?.includes(g) ? 'on' : ''} onClick={() => setEditForm({...editForm, lookingFor: editForm.lookingFor?.includes(g) ? editForm.lookingFor.filter(x => x !== g) : [...(editForm.lookingFor || []), g]})}>{g}</button>)}
                     </div>
                   </label>
                   <button type="button" className="btn-main" onClick={async () => { 
+                    const updatedUser = { ...user, avatar: editForm.avatar, bio: editForm.bio, linkedin: editForm.linkedin, interests: editForm.interests, lookingFor: editForm.lookingFor };
+                    setUser(updatedUser);
                     try { 
-                      await updateDoc(doc(db, 'profiles', user.id), { avatar: user.avatar, bio: user.bio, linkedin: user.linkedin, interests: user.interests, lookingFor: user.lookingFor }); 
+                      await updateDoc(doc(db, 'profiles', user.id), { avatar: editForm.avatar, bio: editForm.bio, linkedin: editForm.linkedin, interests: editForm.interests, lookingFor: editForm.lookingFor }); 
                       notify('Profile updated!'); 
                     } catch(e) { console.error(e); } 
                     setShowEdit(false); 
