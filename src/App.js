@@ -700,20 +700,12 @@ const allowlist = [
     { email: '25ust028@loyolacollege.edu', phone: '+918248093516', name: 'Lenin sagayam' },
     { email: 'dhruv@dyvest.org', phone: '+917358098821', name: 'Dhruv Nair' }
   ];
-  const coreTeam = [
-    { id: 'core1', name: 'Arun Kumar', email: 'arun@strategia.com', phone: '+919876500001', role: 'Event Head', college: 'Loyola College', year: 'Core Team', interests: ['Leadership', 'Strategy'], lookingFor: ['Networking'], bio: 'Leading STRATEGIA 26', avatar: '👨‍💼', linkedin: '', flagged: false, verified: true, isCore: true, connectionCount: 12 },
-    { id: 'core2', name: 'Divya Menon', email: 'divya@strategia.com', phone: '+919876500002', role: 'Marketing Head', college: 'Loyola College', year: 'Core Team', interests: ['Marketing', 'Branding'], lookingFor: ['Networking'], bio: 'Spreading the STRATEGIA story', avatar: '👩‍💼', linkedin: '', flagged: false, verified: true, isCore: true, connectionCount: 8 },
-    { id: 'core3', name: 'Karthik Rajan', email: 'karthik@strategia.com', phone: '+919876500003', role: 'Tech Lead', college: 'Loyola College', year: 'Core Team', interests: ['Tech', 'AI/ML', 'SaaS'], lookingFor: ['Networking'], bio: 'Building STRATEGIA digital', avatar: '👨‍💻', linkedin: '', flagged: false, verified: true, isCore: true, connectionCount: 15 },
-    { id: 'core4', name: 'Meera Sharma', email: 'meera@strategia.com', phone: '+919876500004', role: 'Operations Head', college: 'Loyola College', year: 'Core Team', interests: ['Operations', 'Finance'], lookingFor: ['Networking'], bio: 'Making things run smooth', avatar: '👩‍🔧', linkedin: '', flagged: false, verified: true, isCore: true, connectionCount: 6 },
-    { id: 'core5', name: 'Ravi Krishnan', email: 'ravi@strategia.com', phone: '+919876500005', role: 'Sponsorship Head', college: 'Loyola College', year: 'Core Team', interests: ['Business Dev', 'Finance', 'Consulting'], lookingFor: ['Networking'], bio: 'Connecting with partners', avatar: '🧑‍💼', linkedin: '', flagged: false, verified: true, isCore: true, connectionCount: 10 },
-  ];
+  // Core team - add your real core team members here if needed
+  const coreTeam = [];
   const coreAllowlist = coreTeam.map(c => ({ email: c.email, phone: c.phone, name: c.name }));
 
-  const sampleProfiles = [
-    { id: '1', name: 'Priya Sharma', email: 'priya.sharma@iitm.ac.in', college: 'IIT Madras', year: '3rd Year', interests: ['Fintech', 'Marketing', 'Strategy'], lookingFor: ['Project Partners', 'Networking'], bio: 'Building fintech for rural India', avatar: '👩‍💼', phone: '+919876543210', linkedin: 'https://linkedin.com/in/priya', flagged: false, verified: true, connectionCount: 5 },
-    { id: '2', name: 'Arjun Menon', email: 'arjun.menon@bits-pilani.ac.in', college: 'BITS Pilani', year: '4th Year', interests: ['AI/ML', 'EdTech', 'SaaS'], lookingFor: ['Startup Ideas', 'Study Buddies'], bio: 'Democratizing education with AI', avatar: '👨‍💻', phone: '+919876543211', linkedin: '', flagged: false, verified: true, connectionCount: 3 },
-    { id: '3', name: 'Sneha Patel', email: 'sneha.patel@srcc.du.ac.in', college: 'SRCC Delhi', year: '2nd Year', interests: ['D2C', 'Branding', 'Marketing'], lookingFor: ['Friends', 'Networking'], bio: 'Building conscious brands', avatar: '👩‍🎨', phone: '+919876543212', linkedin: 'https://linkedin.com/in/sneha', flagged: false, verified: true, connectionCount: 7 },
-  ];
+  // Sample profiles removed - app will only show real registered users
+  const sampleProfiles = [];
 
   const interests = ['Fintech', 'EdTech', 'HealthTech', 'AI/ML', 'D2C', 'SaaS', 'Marketing', 'Consulting', 'Finance', 'Crypto', 'E-commerce', 'Content'];
   const goals = ['Project Partners', 'Friends', 'Networking', 'Startup Ideas', 'Case Comp Team', 'Fest Crew', 'Career Advice', 'Just Vibing'];
