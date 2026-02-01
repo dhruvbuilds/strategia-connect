@@ -775,6 +775,35 @@ const allowlist = [
   
   useEffect(() => { if (toast) { const t = setTimeout(() => setToast(null), 3000); return () => clearTimeout(t); } }, [toast]);
 
+  // Load connections, sent/received requests from Firebase when user logs in
+  useEffect(() => {
+    if (!user) return;
+    
+    // Listen for received requests
+    const unsubReceived = onSnapshot(collection(db, 'users', user.id, 'receivedRequests'), (snapshot) => {
+      const requests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setReceivedRequests(requests);
+    }, (error) => console.error('Error loading received requests:', error));
+
+    // Listen for sent requests
+    const unsubSent = onSnapshot(collection(db, 'users', user.id, 'sentRequests'), (snapshot) => {
+      const requests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setSentRequests(requests);
+    }, (error) => console.error('Error loading sent requests:', error));
+
+    // Listen for connections
+    const unsubConnections = onSnapshot(collection(db, 'users', user.id, 'connections'), (snapshot) => {
+      const conns = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setConnections(conns);
+    }, (error) => console.error('Error loading connections:', error));
+
+    return () => {
+      unsubReceived();
+      unsubSent();
+      unsubConnections();
+    };
+  }, [user]);
+
   const handleRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
