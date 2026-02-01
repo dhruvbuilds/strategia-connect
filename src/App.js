@@ -852,7 +852,7 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
                 <div className="info"><b>{p.name}</b><span>{p.email}</span><span className="phone">📱 {p.phone}</span></div>
                 <div className="acts">
                   {p.flagged && <button type="button" className="sm-btn green" onClick={() => unflag(p.id)}>✓</button>}
-                  <button type="button" className="sm-btn red" onClick={() => confirm('Delete?') && remove(p.id)}>🗑️</button>
+                  <button type="button" className="sm-btn red" onClick={() => window.confirm('Delete?') && remove(p.id)}>🗑️</button>
                 </div>
               </div>
             )) : <EmptyState icon="👥" title="No profiles" subtitle={adminTab === 'flagged' ? 'No flagged profiles' : 'No profiles yet'} />}</div>
@@ -1169,7 +1169,7 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
               </div>
               <FeedbackForm user={user} onSubmit={submitFeedback} feedbacks={feedbacks} />
               <div className="settings"><h4>Settings</h4><label>Visibility<select value={user.visible} onChange={e => setUser({ ...user, visible: e.target.value })}><option value="all">Everyone</option><option value="connections">Connections only</option></select></label></div>
-              <div className="danger"><h4>⚠️ Delete Profile</h4><button type="button" className="btn-danger" onClick={() => confirm('Delete profile?') && (setUser(null), setView('landing'))}>Delete</button></div>
+              <div className="danger"><h4>⚠️ Delete Profile</h4><button type="button" className="btn-danger" onClick={() => window.confirm('Delete profile?') && (setUser(null), setView('landing'))}>Delete</button></div>
             </div>
           )}
         </main>
