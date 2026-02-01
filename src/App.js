@@ -1958,7 +1958,7 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
                     <span>📱 {p.phone}</span>
                     <div className="contact-links">
                       <a href={`https://wa.me/${p.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="wa-btn">💬 WhatsApp</a>
-                      {p.linkedin && <a href={p.linkedin} target="_blank" rel="noreferrer">🔗 LinkedIn</a>}
+                      {p.linkedin && <a href={p.linkedin.startsWith('http') ? p.linkedin : `https://${p.linkedin}`} target="_blank" rel="noreferrer">🔗 LinkedIn</a>}
                     </div>
                   </div>
                 </div>
@@ -1973,7 +1973,7 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
                 <p>{user.college} • {user.year}</p>
                 <p className="contact-info">📱 {user.phone}</p>
                 <p className="contact-info">✉️ {user.email}</p>
-                {user.linkedin && <a className="linkedin-link" href={user.linkedin} target="_blank" rel="noreferrer">🔗 LinkedIn Profile</a>}
+                {user.linkedin && <a className="linkedin-link" href={user.linkedin.startsWith('http') ? user.linkedin : `https://${user.linkedin}`} target="_blank" rel="noreferrer">🔗 LinkedIn Profile</a>}
                 <div className="stats-row">
                   <div className="mini-stat"><b>{connections.length}</b><span>Connections</span></div>
                   <div className="mini-stat"><b>{sentRequests.length}</b><span>Pending</span></div>
@@ -2008,7 +2008,7 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
               {modal.bio && <div className="modal-sec"><h4>About</h4><p>{modal.bio}</p></div>}
               <div className="modal-sec"><h4>Interests</h4><div className="tags">{modal.interests.map(i => <span key={i} className={user?.interests?.includes(i) ? 'mutual' : ''}>{i}</span>)}</div></div>
               <div className="modal-sec"><h4>Looking For</h4><div className="tags">{modal.lookingFor.map(i => <span key={i}>{i}</span>)}</div></div>
-              {isConnected(modal.id) && (<div className="modal-sec contact"><h4>Contact</h4><p>📱 {modal.phone}</p><div className="contact-links"><a href={`https://wa.me/${modal.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="wa-btn">💬 WhatsApp</a>{modal.linkedin && <a href={modal.linkedin} target="_blank" rel="noreferrer">🔗 LinkedIn</a>}</div></div>)}
+              {isConnected(modal.id) && (<div className="modal-sec contact"><h4>Contact</h4><p>📱 {modal.phone}</p><div className="contact-links"><a href={`https://wa.me/${modal.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="wa-btn">💬 WhatsApp</a>{modal.linkedin && <a href={modal.linkedin.startsWith('http') ? modal.linkedin : `https://${modal.linkedin}`} target="_blank" rel="noreferrer">🔗 LinkedIn</a>}</div></div>)}
               <div className="modal-bot">
                 {isConnected(modal.id) ? <span className="connected-badge">✓ Connected</span> : 
                  isPending(modal.id) ? <span className="pending-badge">⏳ Request Sent</span> : 
