@@ -93,7 +93,6 @@ const StrategiaConnect = () => {
   const [announcements, setAnnouncements] = useState(() => getStoredState('announcements', []));
   const [showQR, setShowQR] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-  const [editForm, setEditForm] = useState({ avatar: '', bio: '', linkedin: '', interests: [], lookingFor: [] });
   const [visibleCount, setVisibleCount] = useState(20);
   const [appTab, setAppTab] = useState('discover'); // App tab state at parent level
   const [networkError, setNetworkError] = useState(false);
@@ -1652,6 +1651,89 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
     ); 
   };
 
+  const EditModal = ({ user, show, onClose, onSave, interests, goals }) => {
+    const [form, setForm] = useState({ avatar: '', bio: '', linkedin: '', interests: [], lookingFor: [] });
+    
+    useEffect(() => {
+      if (show && user) {
+        setForm({
+          avatar: user.avatar || '👤',
+          bio: user.bio || '',
+          linkedin: user.linkedin || '',
+          interests: [...(user.interests || [])],
+          lookingFor: [...(user.lookingFor || [])]
+        });
+      }
+    }, [show, user]);
+    
+    if (!show || !user) return null;
+    
+    const toggleInterest = (i) => {
+      setForm(f => ({
+        ...f,
+        interests: f.interests.includes(i) ? f.interests.filter(x => x !== i) : [...f.interests, i]
+      }));
+    };
+    
+    const toggleGoal = (g) => {
+      setForm(f => ({
+        ...f,
+        lookingFor: f.lookingFor.includes(g) ? f.lookingFor.filter(x => x !== g) : [...f.lookingFor, g]
+      }));
+    };
+    
+    return (
+      <div className="modal-bg" onClick={onClose}>
+        <div className="modal edit-modal" onClick={e => e.stopPropagation()}>
+          <button type="button" className="close" onClick={onClose}>✕</button>
+          <div className="edit-content">
+            <h2>Edit Profile</h2>
+            <div className="form">
+              <label>Avatar
+                <div className="avatar-inline">
+                  {['👤', '👨‍💼', '👩‍💼', '🧑‍💻', '👨‍🎓', '👩‍🎓', '🦊', '🦁', '🐯', '🎯', '🚀', '💼'].map(a => (
+                    <button key={a} type="button" className={form.avatar === a ? 'on' : ''} onClick={() => setForm(f => ({...f, avatar: a}))}>{a}</button>
+                  ))}
+                </div>
+              </label>
+              <label>Bio
+                <textarea 
+                  value={form.bio} 
+                  onChange={e => setForm(f => ({...f, bio: e.target.value}))} 
+                  placeholder="Tell others about yourself..." 
+                  maxLength={150} 
+                />
+              </label>
+              <label>LinkedIn URL
+                <input 
+                  type="text" 
+                  value={form.linkedin} 
+                  onChange={e => setForm(f => ({...f, linkedin: e.target.value}))} 
+                  placeholder="linkedin.com/in/yourprofile" 
+                />
+              </label>
+              <label>Interests
+                <div className="chips">
+                  {interests.map(i => (
+                    <button key={i} type="button" className={form.interests.includes(i) ? 'on' : ''} onClick={() => toggleInterest(i)}>{i}</button>
+                  ))}
+                </div>
+              </label>
+              <label>Looking For
+                <div className="chips">
+                  {goals.map(g => (
+                    <button key={g} type="button" className={form.lookingFor.includes(g) ? 'on' : ''} onClick={() => toggleGoal(g)}>{g}</button>
+                  ))}
+                </div>
+              </label>
+              <button type="button" className="btn-main" onClick={() => onSave(form)}>Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const FeedbackForm = ({ user, onSubmit, feedbacks }) => {
     const [open, setOpen] = useState(false);
     const [event, setEvent] = useState('');
@@ -1981,7 +2063,7 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
                 </div>
                 {user.bio && <p className="bio">{user.bio}</p>}
                 <div className="tags">{user.interests.map(i => <span key={i}>{i}</span>)}</div>
-                <button type="button" className="btn-edit" onClick={() => { setEditForm({ avatar: user.avatar, bio: user.bio || '', linkedin: user.linkedin || '', interests: [...(user.interests || [])], lookingFor: [...(user.lookingFor || [])] }); setShowEdit(true); }}>✏️ Edit Profile</button>
+                <button type="button" className="btn-edit" onClick={() => setShowEdit(true)}>✏️ Edit Profile</button>
               </div>
               <FeedbackForm user={user} onSubmit={submitFeedback} feedbacks={feedbacks} />
               <div className="settings"><h4>Settings</h4><label>Visibility<select value={user.visible} onChange={e => setUser({ ...user, visible: e.target.value })}><option value="all">Everyone</option><option value="connections">Connections only</option></select></label></div>
@@ -2020,46 +2102,22 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
           </div>
         )}
         {report && (<div className="modal-bg" onClick={() => setReport(null)}><div className="modal sm" onClick={e => e.stopPropagation()}><button type="button" className="close" onClick={() => setReport(null)}>✕</button><h2>Report {report.name}</h2><select id="reason"><option value="">Select reason</option><option>Inappropriate</option><option>Spam/Fake</option><option>Harassment</option><option>Other</option></select><div className="modal-bot"><button type="button" className="btn-ghost" onClick={() => setReport(null)}>Cancel</button><button type="button" className="btn-danger" onClick={() => { const r = document.getElementById('reason').value; if (r) { flag(report.id, r); setReport(null); } }}>Submit</button></div></div></div>)}
-        {showEdit && user && (
-          <div className="modal-bg" onClick={() => setShowEdit(false)}>
-            <div className="modal edit-modal" onClick={e => e.stopPropagation()}>
-              <button type="button" className="close" onClick={() => setShowEdit(false)}>✕</button>
-              <div className="edit-content">
-                <h2>Edit Profile</h2>
-                <div className="form">
-                  <label>Avatar
-                    <div className="avatar-inline">
-                      {['👤', '👨‍💼', '👩‍💼', '🧑‍💻', '👨‍🎓', '👩‍🎓', '🦊', '🦁', '🐯', '🎯', '🚀', '💼'].map(a => (
-                        <button key={a} type="button" className={editForm.avatar === a ? 'on' : ''} onClick={() => setEditForm({...editForm, avatar: a})}>{a}</button>
-                      ))}
-                    </div>
-                  </label>
-                  <label>Bio<textarea value={editForm.bio} onChange={e => setEditForm({...editForm, bio: e.target.value})} placeholder="Tell others about yourself..." maxLength={150} /></label>
-                  <label>LinkedIn URL<input type="text" value={editForm.linkedin} onChange={e => setEditForm({...editForm, linkedin: e.target.value})} placeholder="linkedin.com/in/yourprofile" /></label>
-                  <label>Interests
-                    <div className="chips">
-                      {interests.map(i => <button key={i} type="button" className={editForm.interests?.includes(i) ? 'on' : ''} onClick={() => setEditForm({...editForm, interests: editForm.interests?.includes(i) ? editForm.interests.filter(x => x !== i) : [...(editForm.interests || []), i]})}>{i}</button>)}
-                    </div>
-                  </label>
-                  <label>Looking For
-                    <div className="chips">
-                      {goals.map(g => <button key={g} type="button" className={editForm.lookingFor?.includes(g) ? 'on' : ''} onClick={() => setEditForm({...editForm, lookingFor: editForm.lookingFor?.includes(g) ? editForm.lookingFor.filter(x => x !== g) : [...(editForm.lookingFor || []), g]})}>{g}</button>)}
-                    </div>
-                  </label>
-                  <button type="button" className="btn-main" onClick={async () => { 
-                    const updatedUser = { ...user, avatar: editForm.avatar, bio: editForm.bio, linkedin: editForm.linkedin, interests: editForm.interests, lookingFor: editForm.lookingFor };
-                    setUser(updatedUser);
-                    try { 
-                      await updateDoc(doc(db, 'profiles', user.id), { avatar: editForm.avatar, bio: editForm.bio, linkedin: editForm.linkedin, interests: editForm.interests, lookingFor: editForm.lookingFor }); 
-                      notify('Profile updated!'); 
-                    } catch(e) { console.error(e); } 
-                    setShowEdit(false); 
-                  }}>Save Changes</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        <EditModal 
+          user={user} 
+          show={showEdit} 
+          onClose={() => setShowEdit(false)} 
+          onSave={async (form) => {
+            const updatedUser = { ...user, ...form };
+            setUser(updatedUser);
+            try { 
+              await updateDoc(doc(db, 'profiles', user.id), { avatar: form.avatar, bio: form.bio, linkedin: form.linkedin, interests: form.interests, lookingFor: form.lookingFor }); 
+              notify('Profile updated!'); 
+            } catch(e) { console.error(e); } 
+            setShowEdit(false);
+          }}
+          interests={interests}
+          goals={goals}
+        />
       </div>
     );
   };
