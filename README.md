@@ -2,7 +2,7 @@
 
 Networking app for STRATEGIA'26 - Loyola College Chennai
 
-## 🚀 Quick Deploy to Vercel (Recommended - 5 minutes)
+## 🚀 Quick Deploy to Vercel (Recommended - 5 minutes) |
 
 ### Step 1: Push to GitHub
 1. Create a new repo on GitHub (e.g., `strategia-connect`)
