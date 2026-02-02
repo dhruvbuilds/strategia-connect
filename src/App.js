@@ -1991,11 +1991,6 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
       setVisibleCount(c => c + 20);
     };
     
-    // Reset pagination when filter/search changes
-    useEffect(() => {
-      setVisibleCount(20);
-    }, [filter, debouncedSearch]);
-    
     // Memoized helper functions
     const isConnected = useCallback((id) => connections.some(c => c.id === id), [connections]);
     const isPending = useCallback((id) => sentRequests.some(r => r.id === id), [sentRequests]);
@@ -2032,8 +2027,8 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
           )}
           {tab === 'discover' && (
             <PullToRefresh onRefresh={handleRefresh} refreshing={refreshing}>
-              <div className="search-bar"><span>🔍</span><input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search name, college, interest..." /></div>
-              <button type="button" className="core-team-btn" onClick={() => setFilter('core')}>
+              <div className="search-bar"><span>🔍</span><input type="text" value={search} onChange={e => { setSearch(e.target.value); setVisibleCount(20); }} placeholder="Search name, college, interest..." /></div>
+              <button type="button" className="core-team-btn" onClick={() => { setFilter('core'); setVisibleCount(20); }}>
                 <span>⭐</span>
                 <div>
                   <b>Connect with Core Team</b>
@@ -2041,7 +2036,7 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
                 </div>
                 <span className="arrow">→</span>
               </button>
-              <div className="filter-bar"><div className="filter-scroll"><button type="button" className={filter === 'mutual' ? 'on mutual' : 'mutual'} onClick={() => setFilter(filter === 'mutual' ? '' : 'mutual')}>✨ Mutual Interests</button><button type="button" className={filter === 'core' ? 'on core' : 'core'} onClick={() => setFilter(filter === 'core' ? '' : 'core')}>⭐ Core Team</button>{interests.slice(0, 6).map(i => <button key={i} type="button" className={filter === i ? 'on' : ''} onClick={() => setFilter(filter === i ? '' : i)}>{i}</button>)}</div></div>
+              <div className="filter-bar"><div className="filter-scroll"><button type="button" className={filter === 'mutual' ? 'on mutual' : 'mutual'} onClick={() => { setFilter(filter === 'mutual' ? '' : 'mutual'); setVisibleCount(20); }}>✨ Mutual Interests</button><button type="button" className={filter === 'core' ? 'on core' : 'core'} onClick={() => { setFilter(filter === 'core' ? '' : 'core'); setVisibleCount(20); }}>⭐ Core Team</button>{interests.slice(0, 6).map(i => <button key={i} type="button" className={filter === i ? 'on' : ''} onClick={() => { setFilter(filter === i ? '' : i); setVisibleCount(20); }}>{i}</button>)}</div></div>
               {debouncedSearch !== search && <div className="search-loading">Searching...</div>}
               <div className="results-count">{filtered.length} participant{filtered.length !== 1 ? 's' : ''} found</div>
               <div className="cards">
@@ -2082,7 +2077,7 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
                     icon={search || filter ? "🔍" : "👥"} 
                     title={search || filter ? "No matches found" : "No profiles yet"} 
                     subtitle={search || filter ? "Try different search terms or filters" : "Be the first to join!"} 
-                    action={search || filter ? () => { setSearch(''); setFilter(''); } : null}
+                    action={search || filter ? () => { setSearch(''); setFilter(''); setVisibleCount(20); } : null}
                     actionText="Clear filters"
                   />
                 )}
