@@ -1986,10 +1986,10 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
     const paginatedResults = useMemo(() => filtered.slice(0, visibleCount), [filtered, visibleCount]);
     const hasMore = filtered.length > visibleCount;
     
-    // Load more function
-    const loadMore = useCallback(() => {
-      setVisibleCount(prev => Math.min(prev + 20, filtered.length));
-    }, [filtered.length]);
+    // Load more function - simple increment
+    const loadMore = () => {
+      setVisibleCount(c => c + 20);
+    };
     
     // Reset pagination when filter/search changes
     useEffect(() => {
