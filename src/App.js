@@ -170,6 +170,7 @@ const allowlist = [
     { email: 'alexsimon2k5@gmail.com', phone: '+919789224973', name: 'Alex Simon S', isCore: true },
     { email: 'roderic@dyvest.org', phone: '+916380895654', name: 'Roderic', isCore: true },
     { email: 'pragdeeshn@gmail.com', phone: '+916374741419', name: 'Pragdeesh', isCore: true },
+    { email: '25ubh003@loyolacollege.edu', phone: '+917010216300', name: 'Anirudh', isCore: true },
     // Real participants (757 total)
     { email: 'fate.elec@gmail.com', phone: '+917395997821', name: 'Fatema' },
     { email: 'jrtheo0914@gmail.com', phone: '+917824024015', name: 'Joanne Rose Theopaul' },
@@ -1949,7 +1950,8 @@ ${announcements.length ? announcements.map(a => `[${new Date(a.timestamp).toLoca
       'vanshmoryani.05@gmail.com',
       'shamithvinod.8@gmail.com',
       'roderic@dyvest.org',
-      'pragdeeshn@gmail.com'
+      'pragdeeshn@gmail.com',
+      '25ubh003@loyolacollege.edu'
     ];
     
     // Memoized filtered results - only recalculates when dependencies change
